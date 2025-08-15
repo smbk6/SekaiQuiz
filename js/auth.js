@@ -19,7 +19,8 @@ window.addEventListener("DOMContentLoaded", () => {
     ],
     callbacks: {
       signInSuccessWithAuthResult: (authResult, redirectUrl) => {
-        console.log("ログイン成功:", authResult.user);
+        //console.log("ログイン成功:", authResult.user);
+        alert("ログイン成功");
         window.location.href = "main.html"; // 認証後にメイン画面へ
         return false;
       }
