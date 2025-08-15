@@ -8,15 +8,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const ui = new firebaseui.auth.AuthUI(auth);
 
+// ユーザーエージェントでiOS端末を判定 iphoneだとpopupが使えないため
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
   const uiConfig = {
+    signInFlow: isIOS ? "redirect" : "popup",
     signInOptions: [
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
       firebase.auth.GoogleAuthProvider.PROVIDER_ID
     ],
     callbacks: {
       signInSuccessWithAuthResult: (authResult, redirectUrl) => {
-        window.location.href = "main.html"; // 認証後にメイン画面へ
         console.log("ログイン成功:", authResult.user);
+        window.location.href = "main.html"; // 認証後にメイン画面へ
         return false;
       }
     }
