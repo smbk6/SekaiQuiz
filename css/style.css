@@ -1,0 +1,81 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #111;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+}
+
+#card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 70%;
+    background: #fff;
+    color: #111;
+    font-size: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+#feedback {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    font-size: 3rem;
+    color: white;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.1s ease, transform 0.3s ease;
+    pointer-events: none;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+}
+
+#explanation {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ccc;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.fadeShow {
+    animation: fadeZoom 1.5s ease-out;
+}
+
+@keyframes fadeZoom {
+    0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+    }
+    50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.2);
+    }
+    100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(1);
+    }
+}
+
+.swipe-left {
+    transform: translate(-150%, -50%) rotate(-30deg);
+    opacity: 0;
+}
+
+.swipe-right {
+    transform: translate(150%, -50%) rotate(30deg);
+    opacity: 0;
+}
