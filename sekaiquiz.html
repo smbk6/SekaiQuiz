@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>英単語 Tinder風クイズ</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #111;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+    }
+
+    #card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80%;
+      height: 70%;
+      background: #fff;
+      color: #111;
+      font-size: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transform: translate(-50%, -50%);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+
+    #feedback {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%) scale(1);
+      font-size: 3rem;
+      color: white;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.1s ease, transform 0.3s ease;
+      pointer-events: none;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+    }
+
+    #explanation {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ccc;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    .fadeShow {
+      animation: fadeZoom 1.5s ease-out;
+    }
+
+    @keyframes fadeZoom {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.5);
+      }
+      50% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(-50%) scale(1);
+      }
+    }
+
+    .swipe-left {
+      transform: translate(-150%, -50%) rotate(-30deg);
+      opacity: 0;
+    }
+
+    .swipe-right {
+      transform: translate(150%, -50%) rotate(30deg);
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="card">Loading...</div>
+  <div id="feedback"></div>
+  <div id="explanation"></div>
+
+  <script>
+    const words = [
+      { word: "apple", phonetic: "/ˈæp.əl/", origin: "Old English æppel" },
+      { word: "banana", phonetic: "/bəˈnɑː.nə/", origin: "Wolof (West African)" },
+      { word: "computer", phonetic: "/kəmˈpjuː.tər/", origin: "Latin computare" },
+      { word: "knowledge", phonetic: "/ˈnɒ.lɪdʒ/", origin: "Middle English knowleche" },
+      { word: "elephant", phonetic: "/ˈel.ɪ.fənt/", origin: "Greek elephas" },
+      { word: "university", phonetic: "/ˌjuː.nɪˈvɜː.sə.ti/", origin: "Latin universitas" },
+      { word: "book", phonetic: "/bʊk/", origin: "Old English bōc" },
+      { word: "challenge", phonetic: "/ˈtʃæl.ɪndʒ/", origin: "Latin calumniari" },
+      { word: "freedom", phonetic: "/ˈfriː.dəm/", origin: "Old English frēodōm" },
+      { word: "imagination", phonetic: "/ɪˌmædʒ.ɪˈneɪ.ʃən/", origin: "Latin imaginatio" }
+    ];
+
+    let index = 0;
+    let history = [];
+
+    const card = document.getElementById("card");
+    const feedback = document.getElementById("feedback");
+    const explanation = document.getElementById("explanation");
+
+    function showCard() {
+      if (index < words.length) {
+        const entry = words[index];
+        card.textContent = entry.word;
+        explanation.textContent = "";
+        card.style.transition = "none";
+        card.style.transform = "translate(-50%, -50%) rotate(0deg)";
+        card.style.opacity = 1;
+      } else {
+        card.textContent = "🎉 終わり！";
+        explanation.textContent = "";
+      }
+    }
+
+    function showExplanation() {
+      const entry = words[index];
+      explanation.innerHTML = `<b>発音:</b> ${entry.phonetic}<br><b>語源:</b> ${entry.origin}`;
+    }
+
+    function animateFeedback(text, color) {
+      feedback.textContent = text;
+      feedback.style.color = color;
+      feedback.classList.remove("fadeShow");
+      void feedback.offsetWidth; // 強制再描画
+      feedback.classList.add("fadeShow");
+    }
+
+    function swipe(direction) {
+      if (index >= words.length) return;
+      history.push(index);
+
+      const swipeClass = direction === 'left' ? 'swipe-left' : 'swipe-right';
+      animateFeedback(direction === 'left' ? "Umm..." : "OK!", direction === 'left' ? "#f55" : "#6f6");
+
+      card.classList.add(swipeClass);
+
+      setTimeout(() => {
+        card.classList.remove(swipeClass);
+        index++;
+        showCard();
+      }, 400);
+    }
+
+    function goBack() {
+      if (history.length === 0) return;
+      index = history.pop();
+      showCard();
+    }
+
+    document.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "ArrowRight":
+          swipe('right');
+          break;
+        case "ArrowLeft":
+          swipe('left');
+          break;
+        case "ArrowDown":
+          showExplanation();
+          break;
+        case "ArrowUp":
+          goBack();
+          break;
+      }
+    });
+
+    showCard();
+  </script>
+</body>
+</html>
